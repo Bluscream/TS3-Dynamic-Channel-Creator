@@ -25,6 +25,7 @@ using ClientIdT = System.UInt16;
 using ChannelIdT = System.UInt64;
 using ServerGroupIdT = System.UInt64;
 using ChannelGroupIdT = System.UInt64;
+using TS3Client.Commands;
 
 namespace TS3_Dynamic_Channel_Creator
 {
@@ -69,6 +70,8 @@ namespace TS3_Dynamic_Channel_Creator
                 g["NickName"] = string.Empty;
                 g["Identity"] = Ts3Crypt.GenerateNewIdentity().PrivateKeyString;
                 g["Public Channels"] = "";
+                g["Start Count"] = "1";
+                g["Min Clients In Each Existing Channel For New Channel"] = "1";
                 c["Description"] = "";
                 c["Name"] = "";
                 c["Phonetic name"] = "";
@@ -142,7 +145,7 @@ namespace TS3_Dynamic_Channel_Creator
 
         private static void OnDisconnected(object sender, DisconnectEventArgs e)
         {
-            var client = (Ts3FullClient)sender;
+            // var client = (Ts3FullClient)sender;
             Console.WriteLine("Disconnected from {0} with clid {1}", client.ConnectionData.Address, client.ClientId);
             if (!exit) client.Connect(con);
 
@@ -150,8 +153,22 @@ namespace TS3_Dynamic_Channel_Creator
 
         private static void OnConnected(object sender, EventArgs e)
         {
-            var client = (Ts3FullClient)sender;
+            // var client = (Ts3FullClient)sender;
             Console.WriteLine("Connected to {0} with clid {1}", client.ConnectionData.Address, client.ClientId);
+        }
+
+        private static void CreateTempChannel(int count)
+        {
+            client.Send("channelcreate",
+                new CommandParameter("clid", client.ClientId),
+                new CommandParameter("msg", ""),
+                new CommandParameter("msg", ""),
+                new CommandParameter("msg", ""),
+                new CommandParameter("msg", ""),
+                new CommandParameter("msg", ""),
+                new CommandParameter("msg", ""),
+                new CommandParameter("msg", "")
+            );
         }
     }
 }
